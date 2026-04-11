@@ -1,3 +1,10 @@
+---
+type: idea
+updated_at: {{date}}
+tags:
+  - {{tag1}}
+---
+
 # {{idea}}
 
 ## Compiled Truth

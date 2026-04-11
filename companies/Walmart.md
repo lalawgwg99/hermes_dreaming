@@ -1,3 +1,11 @@
+---
+type: company
+updated_at: 2026-04-11
+tags:
+  - retail
+  - top-revenue
+---
+
 # Walmart
 
 ## Compiled Truth

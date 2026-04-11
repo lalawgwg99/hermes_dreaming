@@ -1,3 +1,10 @@
+---
+type: person
+updated_at: {{date}}
+tags:
+  - {{tag1}}
+---
+
 # {{name}}
 
 ## Compiled Truth

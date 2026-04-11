@@ -1,3 +1,12 @@
+---
+type: company
+updated_at: 2026-04-11
+tags:
+  - retail
+  - technology
+  - top-revenue
+---
+
 # Amazon
 
 ## Compiled Truth

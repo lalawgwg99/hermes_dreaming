@@ -49,3 +49,19 @@ Human edits always win. Agents only append evidence.
 - meta/MIXED_MODE.md：混合模式完整設計
 - meta/TELEGRAM_INTAKE.md：手機端輸入規則
 - meta/SIMPLIFIED_MODE.md：一般使用者版本
+- meta/GBRAIN_INTEGRATION.md：gbrain 整合與同步流程
+- meta/MATURITY_ROADMAP.md：成熟化路線圖
+
+## Quality Gate
+- 本地驗證：`bash scripts/validate_brain.sh`
+- CI 驗證：`.github/workflows/brain-guard.yml`
+- Schema 要求（people/companies/ideas）：
+  - 必須有 YAML frontmatter
+  - 欄位：`type`、`updated_at(YYYY-MM-DD)`、`tags(list)`
+
+## gbrain 整合（可選）
+1) `bash scripts/setup_gbrain.sh`
+2) `gbrain init --supabase`
+3) `gbrain import "<repo_path>" --no-embed`
+4) `gbrain sync --repo "<repo_path>" && gbrain embed --stale`
+5) 本機 nightly 排程：`bash scripts/setup_gbrain_nightly_cron.sh`

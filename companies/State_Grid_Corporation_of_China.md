@@ -1,3 +1,12 @@
+---
+type: company
+updated_at: 2026-04-11
+tags:
+  - utilities
+  - state-owned
+  - top-revenue
+---
+
 # State Grid Corporation of China
 
 ## Compiled Truth

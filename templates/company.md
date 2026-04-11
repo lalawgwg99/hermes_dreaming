@@ -1,3 +1,10 @@
+---
+type: company
+updated_at: {{date}}
+tags:
+  - {{tag1}}
+---
+
 # {{company}}
 
 ## Compiled Truth
