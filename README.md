@@ -1,4 +1,4 @@
-# hermes_life brain repo
+# hermes_dreaming brain repo
 
 這是你的「知識腦」真相來源（Source of Truth）。
 規則很簡單：人類修改永遠優先；代理只補充、整理與追加證據。
