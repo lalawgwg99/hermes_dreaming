@@ -1,88 +1,63 @@
 # hermes_dreaming
 
-`hermes_dreaming` 是一個「給人與 AI 共用」的知識作業系統。
+一個「給人與 AI 共用」的知識作業系統。
 
-它不是一般筆記 app，也不是聊天記錄備份。  
-它的目標是把你的工作資訊變成可持續更新、可追溯、可被 AI 正確讀寫的長期知識庫。
+把你的工作資訊變成可持續更新、可追溯、可被 AI 正確讀寫的長期知識庫。
 
-## 這個產品到底是什麼
-
-一句話：  
-`hermes_dreaming = Markdown 腦庫（真相來源） + 規則 + 自動化流程`
-
-你可以把它理解為：
-
-- 一個 Git 管理的個人/團隊知識資料庫
-- 一套固定資料模型（結論層 + 證據層）
-- 一套代理可遵守的寫入規範（避免亂寫、覆蓋、幻覺）
-
-## 它解決什麼問題
-
-多數知識管理會卡在三件事：
-
-1. 資訊進得來，但長期找不到
-2. 有結論，但不知道證據來源
-3. AI 可以回答，但不能可靠地「累積記憶」
-
-`hermes_dreaming` 的解法：
-
-- `Compiled Truth` 放「目前結論」
-- `Timeline (append-only)` 放「證據事件流」
-- 每條新事實都要帶 `source`
-- 人類可直接編輯，且人類編輯永遠優先
-
-## 誰適合用
-
-- 要讓 AI 長期協作的人（創業者、投資、研究、BD、顧問）
-- 有大量人物/公司/會議資訊需要持續更新的人
-- 想要「可回溯」而不是「一次性摘要」的人
-
-## 核心原則（很重要）
-
-- Source of Truth 在這個 repo（L0）
-- Human edits always win
-- 先讀再寫（Read before write）
-- Timeline 只追加，不回寫
-- 沒來源不升級為結論
-
-## 你每天怎麼用
-
-1. 把新訊息放到 `inbox/`
-2. 整理到對應實體頁（`people/`、`companies/`、`ideas/`）
-3. 在 `Timeline` 追加事件與來源
-4. 有足夠證據才更新 `Compiled Truth`
-5. 跑驗證腳本後再提交
+## 安裝
 
 ```bash
-bash scripts/validate_brain.sh
+cd hermes_dreaming
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e .
 ```
 
-## 第一個實際流程（5 分鐘）
+## 快速開始
 
-假設你今天開完會拿到三個訊息：
+```bash
+# 看 brain 狀態
+brain status
 
-- Jordan 要從 A 公司轉去 B 公司
-- B 公司要在下季啟動新產品
-- 資訊來源是今天會議紀錄
+# 建立一個人物頁
+brain add person "Jordan Lee" --tags "bd,partner"
 
-做法：
+# 快速丟東西進 inbox
+brain inbox "Jordan 要從 A 公司轉去 B 公司"
 
-1. 先把原始筆記丟進 `inbox/2026-04-11_jordan_update.md`
-2. 更新 `people/Jordan.md` 的 timeline（新增事件 + source）
-3. 更新 `companies/B.md` 的 timeline（新增產品規劃事件 + source）
-4. 若證據足夠，再更新對應頁的 `Compiled Truth`
-5. 執行驗證並 commit
+# 搜尋
+brain search "Jordan"
 
-## 資料模型（你要遵守的格式）
+# 看某個實體的時間線
+brain timeline Amazon
 
-`people/`、`companies/`、`ideas/` 的頁面必須包含：
+# 驗證所有 entity 格式
+brain validate
 
-1. YAML frontmatter
-2. `## Compiled Truth`
-3. `## Timeline (append-only)`
-4. Timeline 每一行都帶 `(source: ...)`
+# 跑 Dream Cycle（夜間整理摘要）
+brain dream
+```
 
-範例：
+## CLI 命令一覽
+
+| 命令 | 說明 |
+|---|---|
+| `brain status` | 總覽：檔案數量、entity 統計、標籤、近期活動 |
+| `brain validate` | 驗證 frontmatter、結構、來源完整性 |
+| `brain add <type> <name>` | 從模板建立 entity（person/company/idea/meeting/...） |
+| `brain search <query>` | 全文搜尋所有 entity |
+| `brain inbox <text>` | 快速捕獲到 inbox/ |
+| `brain timeline <entity>` | 顯示某 entity 的時間線 |
+| `brain dream` | 執行 Dream Cycle，生成每日摘要 |
+
+所有命令都支援 `--json` 輸出。
+
+## 資料模型
+
+每個 entity（`people/`、`companies/`、`ideas/`）包含：
+
+1. **YAML frontmatter** — `type`、`updated_at`、`tags`
+2. **Compiled Truth** — 當前結論
+3. **Timeline (append-only)** — 證據事件流，每條帶 `(source: ...)`
 
 ```md
 ---
@@ -90,7 +65,6 @@ type: company
 updated_at: 2026-04-11
 tags:
   - ai
-  - infra
 ---
 
 # Example Co
@@ -103,45 +77,53 @@ tags:
 - 2026-04-11 — Signed pilot with Acme. (source: meeting | Weekly Sync | 2026-04-11)
 ```
 
+## 核心原則
+
+- Source of Truth 在這個 repo（L0）
+- Human edits always win
+- 先讀再寫（Read before write）
+- Timeline 只追加，不回寫
+- 沒來源不升級為結論
+
 ## 資料夾說明
 
-- `people/`：人物頁（一人一檔）
-- `companies/`：公司頁（一公司一檔）
-- `ideas/`：概念與論點
-- `meetings/`：會議紀錄/逐字稿
-- `media/`：文章/書/影片摘要
-- `originals/`：原創想法與輸出
-- `inbox/`：待整理輸入
-- `templates/`：模板
-- `meta/`：規則、流程、整合文件
+| 資料夾 | 內容 |
+|---|---|
+| `people/` | 人物頁（一人一檔） |
+| `companies/` | 公司頁（一公司一檔） |
+| `ideas/` | 概念與論點 |
+| `meetings/` | 會議紀錄 |
+| `media/` | 文章/書/影片摘要 |
+| `originals/` | 原創想法 |
+| `inbox/` | 待整理輸入 |
+| `templates/` | 模板 |
+| `meta/` | 規則、流程、整合文件 |
+| `brain/` | Python CLI 套件 |
 
-## 品質保證（Quality Gate）
+## 品質保證
 
-- 本地驗證：`bash scripts/validate_brain.sh`
-- CI 驗證：`.github/workflows/brain-guard.yml`
+```bash
+# 本地驗證
+brain validate
 
-目前會檢查：
+# JSON 格式
+brain validate --json
+```
 
-- frontmatter 是否完整（`type`、`updated_at`、`tags`）
-- `Compiled Truth`/`Timeline` 區塊是否存在
-- Timeline 條目是否帶 `source`
+CI 在每次 push/PR 時自動驗證（`.github/workflows/brain-guard.yml`）。
 
-## 和 gbrain 的關係
+## 每日流程
 
-- 這個 repo 是 L0（真相來源）
-- gbrain 是 L1（搜尋/向量檢索層）
+1. 新資訊用 `brain inbox` 快速捕獲
+2. 用 `brain add` 建立 entity 或手動整理到對應資料夾
+3. 在 Timeline 追加事件與來源
+4. 有足夠證據才更新 Compiled Truth
+5. `brain validate` 後 commit
 
-你可以先不用 gbrain，純 Markdown 也能運作。  
-當檔案量變大再接 gbrain。
+## 重要文件
 
-整合流程看這裡：
-
-- `meta/GBRAIN_INTEGRATION.md`
-
-## 重要文件（先看這些）
-
-- `meta/SIMPLIFIED_MODE.md`：最短使用方式
-- `meta/WORKFLOW.md`：日常流程
-- `meta/AGENT_RULES.md`：代理讀寫規範
-- `meta/MIXED_MODE.md`：混合模式（L0/L1）
-- `meta/MATURITY_ROADMAP.md`：成熟化路線圖
+- `meta/AGENT_RULES.md` — 代理讀寫規範
+- `meta/WORKFLOW.md` — 日常流程
+- `meta/MIXED_MODE.md` — 混合模式（L0/L1）
+- `meta/GBRAIN_INTEGRATION.md` — gbrain 整合
+- `meta/MATURITY_ROADMAP.md` — 成熟化路線圖
