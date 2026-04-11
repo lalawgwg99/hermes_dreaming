@@ -5,6 +5,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOG_DIR="$REPO_ROOT/meta/logs"
 LOG_FILE="$LOG_DIR/gbrain-nightly.log"
 TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S %Z')"
+export PATH="$HOME/.bun/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
 
 mkdir -p "$LOG_DIR"
 
